@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Tumor Detection System - Medical AI Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <h1>Brain Tumor Detection System</h1>
+                </div>
+                <div class="header-info">
+                    <div class="version">Medical AI v2.0</div>
+                    <div class="date" id="current-date"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Input Image Module -->
+            <div class="module">
+                <div class="module-header">
+                    <h2><i class="fas fa-upload"></i> Input Image Module</h2>
+                </div>
+                <div class="module-content">
+                    <div class="upload-area" id="upload-area">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">
+                            <h3>Upload MRI Brain Image</h3>
+                            <p>Drag and drop your MRI image here</p>
+                            <p class="file-types">Supports: JPG, PNG, DICOM</p>
+                        </div>
+                        <button class="upload-btn">Choose File</button>
+                    </div>
+                    <input type="file" id="image-input" accept="image/*,.dcm" style="display: none;">
+                    
+                    <div class="image-display" id="original-image-display" style="display: none;">
+                        <h3>Original MRI Image</h3>
+                        <img id="original-image" alt="Original MRI">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preprocessing Module -->
+            <div class="module">
+                <div class="module-header">
+                    <h2><i class="fas fa-cogs"></i> Preprocessing Module</h2>
+                </div>
+                <div class="module-content">
+                    <button class="process-btn" id="preprocess-btn" disabled>
+                        <i class="fas fa-magic"></i> Start Preprocessing
+                    </button>
+                    
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <h3>Resized Image</h3>
+                            <div class="image-placeholder">
+                                <i class="fas fa-expand-arrows-alt"></i>
+                                <p>Resized image will appear here</p>
+                            </div>
+                            <canvas id="resized-canvas" width="250" height="250" style="display: none;"></canvas>
+                        </div>
+                        <div class="image-item">
+                            <h3>Filtered Image</h3>
+                            <div class="image-placeholder">
+                                <i class="fas fa-filter"></i>
+                                <p>Filtered image will appear here</p>
+                            </div>
+                            <canvas id="filtered-canvas" width="250" height="250" style="display: none;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Segmentation Module -->
+            <div class="module">
+                <div class="module-header">
+                    <h2><i class="fas fa-cut"></i> Segmentation Module</h2>
+                </div>
+                <div class="module-content">
+                    <button class="process-btn" id="segment-btn" disabled>
+                        <i class="fas fa-scissors"></i> Start Segmentation
+                    </button>
+                    
+                    <div class="image-item">
+                        <h3>Segmented Tumor Region</h3>
+                        <div class="image-placeholder">
+                            <i class="fas fa-search-plus"></i>
+                            <p>Segmented binary image will appear here</p>
+                        </div>
+                        <canvas id="segmented-canvas" width="250" height="250" style="display: none;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature Extraction Module -->
+            <div class="module">
+                <div class="module-header">
+                    <h2><i class="fas fa-chart-bar"></i> Feature Extraction Module</h2>
+                </div>
+                <div class="module-content">
+                    <button class="process-btn" id="extract-btn" disabled>
+                        <i class="fas fa-calculator"></i> Extract Features
+                    </button>
+                    
+                    <div class="features-table-container">
+                        <h3>Statistical and Texture Features</h3>
+                        <div class="features-table" id="features-table" style="display: none;">
+                            <!-- Features table will be populated here -->
+                        </div>
+                        <div class="table-placeholder">
+                            <i class="fas fa-table"></i>
+                            <p>Features will be displayed here after extraction</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Classification Module -->
+            <div class="module">
+                <div class="module-header">
+                    <h2><i class="fas fa-brain"></i> Classification Module</h2>
+                </div>
+                <div class="module-content">
+                    <button class="process-btn" id="classify-btn" disabled>
+                        <i class="fas fa-microscope"></i> Start Classification
+                    </button>
+                    
+                    <div class="classification-result" id="classification-result" style="display: none;">
+                        <!-- Classification result will be populated here -->
+                    </div>
+                    <div class="result-placeholder">
+                        <i class="fas fa-question-circle"></i>
+                        <p>Classification result will appear here</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Metrics Panel -->
+            <div class="module">
+                <div class="module-header">
+                    <h2><i class="fas fa-chart-line"></i> Performance Metrics</h2>
+                </div>
+                <div class="module-content">
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <div class="metric-content">
+                                <h3>Accuracy</h3>
+                                <div class="metric-value" id="accuracy-value">94.2%</div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="metric-content">
+                                <h3>Sensitivity</h3>
+                                <div class="metric-value" id="sensitivity-value">92.8%</div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="metric-content">
+                                <h3>Specificity</h3>
+                                <div class="metric-value" id="specificity-value">95.6%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Brain Tumor Detection System - Medical AI Dashboard</p>
+        </div>
+    </footer>
+
+    <!-- Popup Modal -->
+    <div class="popup-overlay" id="popup-overlay">
+        <div class="popup-modal">
+            <div class="popup-header">
+                <h2><i class="fas fa-brain"></i> Classification Result</h2>
+                <button class="close-btn" id="close-popup">&times;</button>
+            </div>
+            <div class="popup-content">
+                <div class="result-display">
+                    <i class="fas fa-microscope"></i>
+                    <div>
+                        <h1 id="popup-classification">Identified as: Normal</h1>
+                        <p id="popup-probability">Probability: 87.5%</p>
+                    </div>
+                </div>
+                <button class="ok-btn" id="ok-btn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p id="loading-text">Processing...</p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
