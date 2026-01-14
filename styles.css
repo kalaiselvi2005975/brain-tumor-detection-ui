@@ -358,7 +358,7 @@ body {
 }
 
 .feature-item {
-    background: white;
+    background: block;
     border: 1px solid #dee2e6;
     border-radius: 8px;
     padding: 15px;
@@ -1175,3 +1175,4 @@ canvas[id$="-canvas"]:hover {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
